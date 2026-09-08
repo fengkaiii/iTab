@@ -198,6 +198,10 @@
           this._applyFilter(sInput.value);
           syncClear();
         });
+        // 跟踪输入法组合状态：组合中按回车是「确认候选词」，不能触发搜索
+        let composing = false;
+        sInput.addEventListener("compositionstart", () => { composing = true; });
+        sInput.addEventListener("compositionend", () => { composing = false; });
         if (clearBtn) {
           clearBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -207,12 +211,15 @@
           syncClear();
         }
         sInput.addEventListener("keydown", (e) => {
+          const isComposing = composing || e.isComposing || e.keyCode === 229;
           if (e.key === "Escape") {
+            if (isComposing) return; // 交给输入法取消候选
             e.preventDefault();
             clearSearch();
             return;
           }
           if (e.key === "Enter") {
+            if (isComposing) return; // 输入法确认候选词，不搜索
             e.preventDefault();
             const q = sInput.value.trim();
             if (!q) return;
@@ -229,14 +236,8 @@
               return;
             }
             // 否则走搜索引擎
-            const engines = {
-              google: "https://www.google.com/search?q=" + encodeURIComponent(q),
-              bing: "https://www.bing.com/search?q=" + encodeURIComponent(q),
-              duckduckgo: "https://duckduckgo.com/?q=" + encodeURIComponent(q),
-              baidu: "https://www.baidu.com/s?wd=" + encodeURIComponent(q)
-            };
-            const u = engines[this.state.settings.searchEngine] || engines.google;
-            root.open(u, "_blank", "noopener,noreferrer");
+            const engine = itabStore.ENGINES[this.state.settings.searchEngine] || itabStore.ENGINES.google;
+            root.open(engine.url(q), "_blank", "noopener,noreferrer");
           }
         });
       }

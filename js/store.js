@@ -58,6 +58,12 @@
     return "i" + Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
   }
 
+  // 搜索引擎（聚合搜索下拉与回车搜索共用）
+  const ENGINES = {
+    google: { name: "Google", short: "G", color: "#4285F4", url: function (q) { return "https://www.google.com/search?q=" + encodeURIComponent(q); } },
+    bing:   { name: "Bing",   short: "B", color: "#008373", url: function (q) { return "https://www.bing.com/search?q=" + encodeURIComponent(q); } }
+  };
+
   function blank() {
     return {
       version: 1,
@@ -146,6 +152,7 @@
   root.itabStore = {
     DEFAULT_ITEMS: DEFAULT_ITEMS,
     DEFAULT_SETTINGS: DEFAULT_SETTINGS,
+    ENGINES: ENGINES,
     uid: uid,
     load: load,
     save: save,

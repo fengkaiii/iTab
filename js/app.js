@@ -100,7 +100,8 @@
       applyBackground(this.state.settings);
       this._wire();
       this.lp.render();
-      itabStore.onChange((data) => { this.state = data; this._normalize(); applyBackground(this.state.settings); this.lp.setState(this.state); });
+      this._syncGroupToggle();
+      itabStore.onChange((data) => { this.state = data; this._normalize(); applyBackground(this.state.settings); this.lp.setState(this.state); this._syncGroupToggle(); });
       // 监听来自启动台的事件
       window.addEventListener("itab:request-add", (e) => this.openAdd((e.detail && e.detail.group) || ""));
       window.addEventListener("itab:request-edit", (e) => {
@@ -123,11 +124,16 @@
       // URL 调试入口
       if (url.searchParams.get("demo") === "1") this.openAdd();
       if (url.searchParams.get("settings") === "1") this.openSettings();
+      if (url.searchParams.get("se") === "1") this._toggleEngineMenu();
     }
 
     _normalize() {
       // 保证字段齐全
       this.state.settings = Object.assign({}, itabStore.DEFAULT_SETTINGS, this.state.settings);
+      // 搜索引擎若已被移除（如旧数据的 baidu/duckduckgo），回退到 google
+      if (!itabStore.ENGINES[this.state.settings.searchEngine]) {
+        this.state.settings.searchEngine = "google";
+      }
       for (const it of this.state.items) {
         if (!it.id) it.id = itabStore.uid();
         if (!it.icon) it.icon = { type: "auto", value: "" };
@@ -140,10 +146,95 @@
       await itabStore.save(this.state);
     }
 
+    _toggleGroupMode() {
+      this.state.settings.groupMode = !this.state.settings.groupMode;
+      this._persist().then(() => {
+        this._syncGroupToggle();
+        this.lp.render();
+        toast(this.state.settings.groupMode ? "已开启分组模式" : "已关闭分组模式");
+      });
+    }
+
+    // 同步顶栏分组按钮与设置面板 checkbox 的激活态
+    _syncGroupToggle() {
+      const on = !!this.state.settings.groupMode;
+      const btn = $("#btnGroupToggle");
+      if (btn) {
+        btn.classList.toggle("active", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+        btn.title = on ? "分组模式：开（点击关闭）" : "分组模式：关（点击开启）";
+      }
+      const cb = $("#fGroupMode");
+      if (cb) cb.checked = on;
+    }
+
+    // === 搜索引擎切换（聚合搜索下拉）===
+    _renderEngineMenu() {
+      const menu = $("#searchEngineMenu");
+      if (!menu) return;
+      menu.innerHTML = "";
+      const cur = this.state.settings.searchEngine;
+      Object.keys(itabStore.ENGINES).forEach((key) => {
+        const eng = itabStore.ENGINES[key];
+        const item = el("div", { class: "se-item" + (key === cur ? " active" : ""), "data-engine": key });
+        item.appendChild(el("span", { class: "se-badge", style: "background:" + eng.color, text: eng.short }));
+        item.appendChild(el("span", { class: "se-name", text: eng.name }));
+        if (key === cur) item.appendChild(el("span", { class: "se-check", html: "✓" }));
+        item.addEventListener("click", () => this._selectEngine(key));
+        menu.appendChild(item);
+      });
+    }
+
+    _toggleEngineMenu() {
+      const menu = $("#searchEngineMenu");
+      if (!menu) return;
+      menu.hidden = !menu.hidden;
+      this._syncEngineBtn();
+    }
+
+    _syncEngineBtn() {
+      const menu = $("#searchEngineMenu");
+      const btn = $("#btnSearchEngine");
+      const open = !!(menu && !menu.hidden);
+      if (btn) {
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        btn.classList.toggle("open", open);
+      }
+    }
+
+    _selectEngine(key) {
+      if (!itabStore.ENGINES[key]) return;
+      this.state.settings.searchEngine = key;
+      this._persist().then(() => {
+        this._renderEngineMenu();
+        $("#searchEngineMenu").hidden = true;
+        this._syncEngineBtn();
+        toast("已切换到 " + itabStore.ENGINES[key].name);
+        // 搜索框已有内容时，直接改用新引擎搜索
+        const q = ($("#searchInput").value || "").trim();
+        if (q) root.open(itabStore.ENGINES[key].url(q), "_blank", "noopener,noreferrer");
+      });
+    }
+
     _wire() {
       // 顶栏按钮
       $("#btnAdd").addEventListener("click", () => this.openAdd());
       $("#btnSettings").addEventListener("click", () => this.openSettings());
+      $("#btnGroupToggle").addEventListener("click", () => this._toggleGroupMode());
+
+      // 搜索引擎切换（聚合搜索下拉）
+      $("#btnSearchEngine").addEventListener("click", (e) => {
+        e.stopPropagation();
+        this._toggleEngineMenu();
+      });
+      this._renderEngineMenu();
+      document.addEventListener("click", (e) => {
+        const menu = $("#searchEngineMenu");
+        if (menu && !menu.hidden && !e.target.closest("#searchWrap")) {
+          menu.hidden = true;
+          this._syncEngineBtn();
+        }
+      });
 
       // 弹窗遮罩关闭
       $$(".modal-mask").forEach((m) => m.addEventListener("click", () => this._closeAllModals()));
@@ -452,6 +543,7 @@
       $("#fGroupMode").addEventListener("change", (e) => {
         this.state.settings.groupMode = e.target.checked;
         this._persist().then(() => {
+          this._syncGroupToggle();
           this.lp.render();
           toast(e.target.checked ? "已开启分组模式" : "已关闭分组模式");
         });

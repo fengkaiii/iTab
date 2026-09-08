@@ -17,14 +17,21 @@
       <button class="icon-btn" id="btnSettings" title="设置" aria-label="设置" data-page-node-id="lNAZBsx4Fpol7JUP4huSc5">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="JlF8nARTAFjljXWY4i9wn9"><circle cx="12" cy="12" r="3" data-page-node-id="YdMrGM1835Z0WpVBkaffUq"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.86l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.86-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.86.34l-.06.06A2 2 0 1 1 4.25 16.97l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.86l-.06-.06A2 2 0 1 1 7.03 4.25l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.86-.34l.06-.06A2 2 0 1 1 19.75 7.03l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z" data-page-node-id="utAbXmuVD6MXg71V7pHDHz"/></svg>
       </button>
+      <button class="icon-btn" id="btnGroupToggle" title="分组模式" aria-label="分组模式" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h3.5l2 2H19a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+      </button>
     </div>
 
     <div class="topbar-center" id="searchWrap" data-page-node-id="46mLOlHeVtaAH49i20DC4r">
-      <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="tdN4xlH9i88sa4Rz9qQf8D"><circle cx="11" cy="11" r="7" data-page-node-id="Ojc9dtfmuqEn1pbFJTR6jQ"/><path d="M21 21l-4.3-4.3" data-page-node-id="3KnrYNiZtWkos4lUxnLfUr"/></svg>
+      <button class="search-engine-btn" id="btnSearchEngine" title="切换搜索引擎" aria-label="切换搜索引擎" aria-haspopup="true" aria-expanded="false">
+        <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <svg class="search-engine-caret" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
       <input id="searchInput" type="text" autocomplete="off" spellcheck="false" placeholder="搜索或输入网址" data-page-node-id="6pr3mADEc7fkIUgkEWCn4P" />
       <button class="search-clear" id="btnSearchClear" type="button" title="清除" aria-label="清除" hidden>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
+      <div class="search-engine-menu" id="searchEngineMenu" hidden></div>
     </div>
 
     <div class="topbar-right" data-page-node-id="AJREXBJ1ksXEwapofICXJA">
@@ -191,8 +198,6 @@
               <select id="fSearchEngine" data-page-node-id="bUIH0PdBanJDqu3ZsfKI0x">
                 <option value="google" data-page-node-id="B01thl1B92hUAqps8EfBX8">Google</option>
                 <option value="bing" data-page-node-id="cn7FAoCjMyUrbfCMaMB9TS">Bing</option>
-                <option value="duckduckgo" data-page-node-id="mQxzvBLpnEZ216ArsdBdKy">DuckDuckGo</option>
-                <option value="baidu" data-page-node-id="Oo8iSvYCeNQQQ9Fu7EyvI8">百度</option>
               </select>
             </label>
           </div>
