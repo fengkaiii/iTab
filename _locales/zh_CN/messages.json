@@ -1,0 +1,10 @@
+{
+  "extension_name": {
+    "message": "iTab · 启动台起始页",
+    "description": "扩展名称"
+  },
+  "extension_description": {
+    "message": "把新标签页变成 macOS 启动台风格：网格收藏、自动获取 favicon、可自定义图标、分页与拖拽。",
+    "description": "扩展描述"
+  }
+}

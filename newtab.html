@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="I1TnFQPebBDqAqz6qArIfX">
+<head data-page-node-id="lHdvDQWnm8CUTuwjUAcE9a">
+  <meta charset="UTF-8" data-page-node-id="F0AnR1T6ywsMaIfnT3BWt6" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" data-page-node-id="Gm2dsu4IGlTZGZOAMGzzck" />
+  <title>新标签页</title>
+  <link rel="stylesheet" href="css/launchpad.css" data-page-node-id="0hBmqFRYDv2g2nMNDRXHE7" />
+</head>
+<body data-page-node-id="DST4jkXoK3nYi5jp85mvf8">
+  <!-- 背景层：可由设置替换为自定义图片 -->
+  <div class="bg-layer" id="bgLayer" data-page-node-id="wmdK4xkAjXGhCzJsFeaTgN"></div>
+  <div class="bg-tint" id="bgTint" data-page-node-id="ap5GZVGrBr3jrf66l9Lu2m"></div>
+
+  <!-- 顶栏 -->
+  <header class="topbar" data-page-node-id="hKQgxOOtFulMpvlYaNFjOR">
+    <div class="topbar-left" data-page-node-id="8F7ByjFS8H2zapJCsqPGzb">
+      <button class="icon-btn" id="btnSettings" title="设置" aria-label="设置" data-page-node-id="lNAZBsx4Fpol7JUP4huSc5">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="JlF8nARTAFjljXWY4i9wn9"><circle cx="12" cy="12" r="3" data-page-node-id="YdMrGM1835Z0WpVBkaffUq"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.86l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.86-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.86.34l-.06.06A2 2 0 1 1 4.25 16.97l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.86l-.06-.06A2 2 0 1 1 7.03 4.25l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.86-.34l.06-.06A2 2 0 1 1 19.75 7.03l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z" data-page-node-id="utAbXmuVD6MXg71V7pHDHz"/></svg>
+      </button>
+    </div>
+
+    <div class="topbar-center" id="searchWrap" data-page-node-id="46mLOlHeVtaAH49i20DC4r">
+      <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="tdN4xlH9i88sa4Rz9qQf8D"><circle cx="11" cy="11" r="7" data-page-node-id="Ojc9dtfmuqEn1pbFJTR6jQ"/><path d="M21 21l-4.3-4.3" data-page-node-id="3KnrYNiZtWkos4lUxnLfUr"/></svg>
+      <input id="searchInput" type="text" autocomplete="off" spellcheck="false" placeholder="搜索或输入网址" data-page-node-id="6pr3mADEc7fkIUgkEWCn4P" />
+      <button class="search-clear" id="btnSearchClear" type="button" title="清除" aria-label="清除" hidden>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="topbar-right" data-page-node-id="AJREXBJ1ksXEwapofICXJA">
+      <button class="icon-btn" id="btnAdd" title="添加站点" aria-label="添加" data-page-node-id="CGpH0COL45xxtFyFHaYm1I">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="VJKyMZPLyAVAAi25bqj8V9"><path d="M12 5v14M5 12h14" data-page-node-id="dhKfrpHo8WVaQ7ItjwIhAx"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主体：启动台网格 -->
+  <main class="stage" id="stage" data-page-node-id="sdTCh3knIiqWvjhPZav0s2">
+    <div class="page-viewport" id="pageViewport" data-page-node-id="0gAAT1uDtcOdtYllpEH5Yx">
+      <section class="page page-current" id="pageRoot" data-page="0" data-page-node-id="5Xf3di1MwXDSkTW4NQs1db"></section>
+    </div>
+  </main>
+
+  <!-- 分页指示 -->
+  <nav class="pager" id="pager" data-page-node-id="U6E40HcqN8WmpdlEcYCt1B"></nav>
+
+  <!-- 隐藏的文件输入（用于导入 JSON / 上传图标 / 上传背景） -->
+  <input type="file" id="hiddenFile" accept="image/*" hidden data-page-node-id="AA7TOIb4FZbzYUIFfUzrWv" />
+  <input type="file" id="hiddenJson" accept="application/json" hidden data-page-node-id="05lX6xxAkD1E4K04oJqxq0" />
+
+  <!-- 弹窗：添加 / 编辑站点 -->
+  <div class="modal" id="modalItem" hidden data-page-node-id="vK3iCJioQSvF78QhTjNtRC">
+    <div class="modal-mask" data-page-node-id="6ueAg7vaTPqaoZ1OIpyrcy"></div>
+    <div class="modal-card" data-page-node-id="s5v7pjbLFsQDSpjRtNsVzy">
+      <div class="modal-title" id="modalItemTitle" data-page-node-id="AEJHGkpAALJHsWPEtXq4eo">添加站点</div>
+      <div class="modal-body" data-page-node-id="27fusxpGHAMKqTbSr1KmfN">
+        <div class="form-row form-row-2" data-page-node-id="YCl925tj0Xwb3v39BCe9Dn">
+          <label class="form-field" data-page-node-id="qg0PQctbnG5r4HtC62IBW8">
+            <span data-page-node-id="Ly790NywlBMFwi0Tobxy1Q">名称</span>
+            <input id="fTitle" type="text" maxlength="40" placeholder="显示在图标下方" data-page-node-id="02KE8G2GA1bDOGvZM9xLyq" />
+          </label>
+          <label class="form-field" data-page-node-id="65qyAIZlArSPxEk1qmGDzc">
+            <span data-page-node-id="eozaLNfaVaOVCRv6Mer7oM">网址</span>
+            <input id="fUrl" type="text" inputmode="url" placeholder="https://example.com" data-page-node-id="PE91AxgCkflJaCfL2EFipd" />
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="form-field">
+            <span>分组（可选，开启分组模式后按此归类）</span>
+            <input id="fGroup" type="text" maxlength="20" placeholder="留空则归入「未分组」" list="groupOptions" autocomplete="off" />
+            <datalist id="groupOptions"></datalist>
+          </label>
+        </div>
+
+        <div class="form-section" data-page-node-id="ser8uRM2PDtzyaoTnlCgCj">
+          <div class="form-section-title" data-page-node-id="kca6p93RLo4pQZGPHFRarB">图标</div>
+          <div class="icon-picker" id="iconPicker" data-page-node-id="vkf61lXvjA8uSq6vd17eEb">
+            <div class="icon-preview" id="iconPreview" data-page-node-id="twIHiHJ1Xm5yVW5fq4ROUJ"></div>
+            <div class="icon-tabs" data-page-node-id="qWEYRtzyGcAwBZDYjhfXhv">
+              <button class="icon-tab active" data-tab="auto" data-page-node-id="F5bcSg6xuWrzM4Vny7Kxww">自动</button>
+              <button class="icon-tab" data-tab="upload" data-page-node-id="VfuGHCZTVBAsrKtwtYybne">上传</button>
+              <button class="icon-tab" data-tab="emoji" data-page-node-id="aMTChskp3L8bpVHgd0YhFU">Emoji</button>
+              <button class="icon-tab" data-tab="letter" data-page-node-id="43IfFTcdAUJw3z68Wx6PHV">字母</button>
+            </div>
+            <div class="icon-tab-panel" data-panel="auto" data-page-node-id="HkTJEbtSX4pLRIjSse6fAq">
+              <p class="hint" data-page-node-id="2Jo2IQWsQ5tB81PZAQjmws">保存时按域名自动抓取 favicon（多源回退）。</p>
+            </div>
+            <div class="icon-tab-panel" data-panel="upload" hidden data-page-node-id="LQSaihI1nTdB4TA1JDxciZ">
+              <button class="btn" id="btnUploadIcon" data-page-node-id="wMPRIVut68RC0TWeiGnMiq">选择本地图片</button>
+              <p class="hint" data-page-node-id="OrCLmT1mjwJVUwG6PIw5xE">支持 PNG / JPG / SVG，自动缩放到 256px。</p>
+            </div>
+            <div class="icon-tab-panel" data-panel="emoji" hidden data-page-node-id="CNOtHGph3H16HkV36EHFWH">
+              <input id="fEmoji" type="text" maxlength="4" placeholder="例如 ⭐ 🚀 📚" data-page-node-id="ImZq64YAETUjKmkMtMPPfX" />
+              <p class="hint" data-page-node-id="TibJfSrG4mLaVnRr9sUPzP">输入一个 Emoji 作为图标。</p>
+            </div>
+            <div class="icon-tab-panel" data-panel="letter" hidden data-page-node-id="V2CSya2TXM3iD3OfxbOt4j">
+              <div class="letter-row" data-page-node-id="fr4yH8WLCIZ2knDvi0o5KN">
+                <input id="fLetter" type="text" maxlength="2" placeholder="A" data-page-node-id="iMXQgehvRV6UvvFVBYTaPM" />
+                <input id="fBg1" type="color" value="#6366F1" data-page-node-id="2meEwMCuLzLUmD5KejkxoV" />
+                <input id="fBg2" type="color" value="#22D3EE" data-page-node-id="nPhCRfKIzhPaWaX1eZiPuP" />
+              </div>
+              <p class="hint" data-page-node-id="xKJ9NsiaoOAEdI6HkW12bN">用首字母 + 渐变色作为图标（默认取域名首字母）。</p>
+            </div>
+            <div class="icon-tab-panel" data-panel="custom" hidden data-page-node-id="eTKb6JDzVXNBdCfcfJpzOX">
+              <p class="hint" data-page-node-id="X4eZ5dnXgPMsh2Eu6nEsjj">自定义图标 URL（备用）。</p>
+              <input id="fIconUrl" type="text" placeholder="https://..." data-page-node-id="2pZmg9av80UYLICh6GkrVI" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row form-row-2" data-page-node-id="gmC7iMUQhZwuJD9GZFFkBD">
+          <label class="form-field" data-page-node-id="xRmmDbhYwM9A3dvQfTFWZ6">
+            <span data-page-node-id="gcZw7gHDSLWq0hN7HWFexI">打开方式</span>
+            <select id="fOpenIn" data-page-node-id="VGRqPvvYXBRi5WMNj6ludO">
+              <option value="new" data-page-node-id="CsOGSzuri1VAGZC7G6aFUX">新标签页</option>
+              <option value="current" data-page-node-id="zUMwjaqVIVU7QMsAAgIZpH">当前标签页</option>
+            </select>
+          </label>
+          <label class="form-field" data-page-node-id="EtMeRdACAIDRu8c5mEwJzp">
+            <span data-page-node-id="DB02UdsCMBQU87ryGQ8BCC">来源</span>
+            <select id="fIconSource" data-page-node-id="8VPUbCX3aIKZo2AB1S8fwz">
+              <option value="auto" data-page-node-id="8hzDNIkFJuy3uv0uviUEec">自动 (推荐)</option>
+              <option value="duckduckgo" data-page-node-id="xai7jIHUQAstEUKeBkDpZg">DuckDuckGo</option>
+              <option value="google" data-page-node-id="6Nj0jovVOODxDby2EcDkBT">Google s2</option>
+              <option value="direct" data-page-node-id="Ba63xqpc0J57EmYyAIwIBd">直接 /favicon.ico</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="modal-actions" data-page-node-id="XUdgElVibScmAuyStmGzkM">
+        <button class="btn btn-ghost" id="btnCancel" data-page-node-id="80mPJWBRSqIFW8lJbK7Nzd">取消</button>
+        <button class="btn btn-danger" id="btnDelete" hidden data-page-node-id="J2gJcCYvBPHuNAMBRGhKQV">删除</button>
+        <button class="btn btn-primary" id="btnSave" data-page-node-id="mnNwkcI667SIBKiFBzdwUf">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：设置 -->
+  <div class="modal" id="modalSettings" hidden data-page-node-id="z7ZeK3gNTjV4uKBjqUgAwT">
+    <div class="modal-mask" data-page-node-id="5ZHexlEg7s6Ekcs69JODvt"></div>
+    <div class="modal-card modal-card-wide" data-page-node-id="D07gJlj7JU5CjVumsqTzMN">
+      <div class="modal-title" data-page-node-id="LPEMkX2q4Zc4M0MY3NuD1z">设置</div>
+      <div class="modal-body" data-page-node-id="zQHBCZq3phN8Ksl3WDFtNH">
+        <div class="form-section" data-page-node-id="gZyNGg8qjoBQWN5BJDmDGL">
+          <div class="form-section-title" data-page-node-id="VTYTvUx7dmhNOl1wqif6QX">背景</div>
+          <div class="bg-grid" id="bgGrid" data-page-node-id="BuIARSirJPU0RgVlDaLcWb">
+            <button class="bg-swatch" data-bg="sonoma"  style="background:linear-gradient(135deg,#ff9966,#ff5e62,#ff1e56)" data-page-node-id="tkO3IFsrpnv3738RqZbFem"><span data-page-node-id="PDVYTsagFBN6Yvmuiug3CD">Sonoma</span></button>
+            <button class="bg-swatch" data-bg="monterey" style="background:linear-gradient(135deg,#5e5ce6,#bf5af2,#ff375f)" data-page-node-id="9nRXwBaA5fj6iPo5hBGbGC"><span data-page-node-id="dw9jecutbZNJNIsdAJx1Z1">Monterey</span></button>
+            <button class="bg-swatch" data-bg="bigsur"  style="background:linear-gradient(135deg,#0093E9,#80D0C7)" data-page-node-id="hVpHWARdXjuE9yPdlV0Lzz"><span data-page-node-id="GSQIygYlH8j47viD5reyIF">Big Sur</span></button>
+            <button class="bg-swatch" data-bg="mojave"   style="background:linear-gradient(180deg,#232526 0%,#414345 60%,#c2a26a 100%)" data-page-node-id="7iHgCCkCPUeXGxb3IJdXID"><span data-page-node-id="adF74ZJObGupfw4sK8EZuh">Mojave</span></button>
+            <button class="bg-swatch" data-bg="ocean"    style="background:linear-gradient(135deg,#0f2027,#203a43,#2c5364)" data-page-node-id="Rz6yiq7tAFww9ovm4nTLID"><span data-page-node-id="0sWulLIX7BwOZSCsUxpada">Ocean</span></button>
+            <button class="bg-swatch" data-bg="sakura"   style="background:linear-gradient(135deg,#fbc2eb,#a6c1ee)" data-page-node-id="HbaBvFJYUd1JuSsNcZAnxE"><span data-page-node-id="Vu2FDy7Rsw2CEI9JyTLoh0">Sakura</span></button>
+            <button class="bg-swatch" data-bg="dark"     style="background:#111" data-page-node-id="SXDu8aszBQtVbeCtBe6JmD"><span data-page-node-id="JQwYdD7qLR25xfBSN5v9UP">深色</span></button>
+            <button class="bg-swatch" data-bg="custom"   id="bgCustom" data-page-node-id="00q7SAjxAQcstfg3imaoZv"><span data-page-node-id="m3SxhdZhVSbEOoL3uGh6u2">自定义</span></button>
+          </div>
+          <div class="form-row form-row-2" data-page-node-id="0LDS6yFYrLGcm4GKnsxkFR">
+            <label class="form-field" data-page-node-id="cqxTLCItDLpjxIjsPPjNME"><span data-page-node-id="3KlN6abAOQLbgRbnDRWrn8">模糊 <em id="lblBlur" data-page-node-id="AadqbFqyV2e1Bksn53XryO">22</em>px</span><input id="fBlur" type="range" min="0" max="40" data-page-node-id="MB1SwpQLo9cpbSty1FbH3N" /></label>
+            <label class="form-field" data-page-node-id="GJygrBvxjlttOCtVdgGAL6"><span data-page-node-id="rYC4QyKrc1uLISokwSeU8u">暗化 <em id="lblDim" data-page-node-id="ysmmgqtaOZwo1QdWQssbFA">18</em>%</span><input id="fDim" type="range" min="0" max="60" data-page-node-id="CZZHinihE2mKHEcjrLDImZ" /></label>
+          </div>
+        </div>
+
+        <div class="form-section" data-page-node-id="eqDCsWTIvLb4E3EtuAjCnr">
+          <div class="form-section-title" data-page-node-id="7LMArVhfVcwHcc4LOQcvWK">布局</div>
+          <div class="form-row form-row-2" data-page-node-id="9xubsrqNkmqAUBW7zX9bfj">
+            <label class="form-field" data-page-node-id="7wo5Vv8QhoXlCLhnYvCimf"><span data-page-node-id="6PhI5Q7aykxkngnZ2Vi76y">列数</span>
+              <select id="fColumns" data-page-node-id="WvRLp9BVYuML0v6Qt8DVtw">
+                <option value="auto" data-page-node-id="w21Yx9TJH3UZSAG4CKIPkZ">自适应</option>
+                <option value="5" data-page-node-id="DwmIAhKvwvLCr0XxNbrG3X">5</option><option value="6" data-page-node-id="BVDBjR2ev37YbUTkuDdKuR">6</option><option value="7" data-page-node-id="LKGUTOulFEnYYVSa48Eg1c">7</option>
+                <option value="8" data-page-node-id="wKwyxPUdr4X3LNMQ2N40Gi">8</option><option value="9" data-page-node-id="H2WDf5sHHm3NWf0vl4fv5c">9</option><option value="10" data-page-node-id="QJTLujf03QjNSynVlXITSw">10</option>
+              </select>
+            </label>
+            <label class="form-field" data-page-node-id="qMbqxUeeCABSnDphNbn5oD"><span data-page-node-id="VhduLBmWyG8ZDYSuL0GbZd">图标大小 <em id="lblIconSize" data-page-node-id="wXSmp0g1BIiZEs0p5feHok">76</em>px</span>
+              <input id="fIconSize" type="range" min="48" max="120" data-page-node-id="1l7MA8rf5J9hZNYmRPbsxr" />
+            </label>
+          </div>
+          <div class="form-row form-row-2" data-page-node-id="GmuGBEjEoahLUvteglNYwF">
+            <label class="form-field" data-page-node-id="upFwjIV9E7pJExQr4E7pSK"><span data-page-node-id="6FP47wldgGOiiRuCsIcDwX">标签字号 <em id="lblLabelSize" data-page-node-id="BuQPJiXeQ22056KX0nGqPJ">13</em>px</span><input id="fLabelSize" type="range" min="11" max="18" data-page-node-id="gBSbegNZxWl2s9bYvJKOsD" /></label>
+            <label class="form-field checkbox-row" data-page-node-id="gypKQ6A4HQmfl7vDNggriJ"><input id="fShowLabels" type="checkbox" checked data-page-node-id="7EFYh9rmiiqZ8R287EEnOo" /><span data-page-node-id="sHvn75NwwTIdu5ErTHU1oa">显示标签</span></label>
+          </div>
+          <div class="form-row">
+            <label class="form-field checkbox-row"><input id="fGroupMode" type="checkbox" /><span>分组模式（按分组归类显示）</span></label>
+          </div>
+        </div>
+
+        <div class="form-section" data-page-node-id="lkEw4R3bXS2BoUPozhqJgJ">
+          <div class="form-section-title" data-page-node-id="OskbNwfp5gSeXX0l1vbZCg">搜索与打开</div>
+          <div class="form-row form-row-2" data-page-node-id="HnSfQgEf7fyKI75NMJQK10">
+            <label class="form-field checkbox-row" data-page-node-id="SF9kAKVCXjntWT5iAohKsO"><input id="fShowSearch" type="checkbox" checked data-page-node-id="YO4bbjyD2DkiSkNydDzeDl" /><span data-page-node-id="Auh4hIwWrxWv1y9vDdLBBZ">显示顶部搜索</span></label>
+            <label class="form-field" data-page-node-id="RdASfWqF2i3CcxOUt2TEb1"><span data-page-node-id="E9cL6DrWNCDW6fVHGbCdlz">搜索引擎</span>
+              <select id="fSearchEngine" data-page-node-id="bUIH0PdBanJDqu3ZsfKI0x">
+                <option value="google" data-page-node-id="B01thl1B92hUAqps8EfBX8">Google</option>
+                <option value="bing" data-page-node-id="cn7FAoCjMyUrbfCMaMB9TS">Bing</option>
+                <option value="duckduckgo" data-page-node-id="mQxzvBLpnEZ216ArsdBdKy">DuckDuckGo</option>
+                <option value="baidu" data-page-node-id="Oo8iSvYCeNQQQ9Fu7EyvI8">百度</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row form-row-2" data-page-node-id="mQ2JpZCIWzXjVonVDB05CZ">
+            <label class="form-field" data-page-node-id="y3eyFULbdJNAntvuHdFzAp"><span data-page-node-id="lpdEESqSBJOOJGyYxjDsm3">默认打开方式</span>
+              <select id="fOpenIn" data-page-node-id="oFHilrHGuO3tP2p6EYe3r1">
+                <option value="new" data-page-node-id="G3WuFR4pfFHR6gHmeqC2GD">新标签页</option>
+                <option value="current" data-page-node-id="Py7AY0R2CDsJ0v4NLQjy6b">当前标签页</option>
+              </select>
+            </label>
+            <label class="form-field" data-page-node-id="hRaxQYrZIU2A8nz64w3CIk"><span data-page-node-id="9iEEseSw9YJuQI2EEuSqfC">图标源（自动模式）</span>
+              <select id="fIconSource" data-page-node-id="tHlJtuiB54xbZ5hzbGJFm1">
+                <option value="auto" data-page-node-id="iQuruzcqD0AZDW02T4CLKm">自动多源</option>
+                <option value="duckduckgo" data-page-node-id="bH5j40B73nql2kRN9uUtHZ">DuckDuckGo</option>
+                <option value="google" data-page-node-id="OjMql9C99NLsWadfZVAVEQ">Google</option>
+                <option value="direct" data-page-node-id="Gl4XtQT9KY44cj8Zl0iwJd">直接 /favicon.ico</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section" data-page-node-id="9BGplfHL3DtxmUs9amWL8h">
+          <div class="form-section-title" data-page-node-id="B5tK8y3ZQQDAyYLsgnVOBy">数据</div>
+          <div class="form-row form-row-3" data-page-node-id="cIZA0d42WlRwdFv3sfB6Ca">
+            <button class="btn" id="btnImportJson" data-page-node-id="nVr09WkwFjrYFaHmeMcSpz">导入 JSON</button>
+            <button class="btn" id="btnExportJson" data-page-node-id="7LyfXnRH4SIQNSjprylaYS">导出 JSON</button>
+            <button class="btn" id="btnImportBookmarks" data-page-node-id="RqBYJuGXNYSaByU4Lfj7mS">从书签导入…</button>
+          </div>
+          <div class="form-row form-row-2" data-page-node-id="vjIezFYe7AxDGg43WbNepn">
+            <button class="btn btn-danger" id="btnReset" data-page-node-id="4T4cKEaMB88X9rFbv1kw4C">恢复默认示例</button>
+            <button class="btn btn-danger" id="btnClear" data-page-node-id="fB3nOxKgeGJNToJroAxId9">清空所有</button>
+          </div>
+        </div>
+
+        <div class="form-section hint" data-page-node-id="7oklx5NpyK7dcFDDquldzv">
+          提示：在空白处右键可进入编辑模式（图标抖动 + 删除按钮）。图标长按可拖动重排。双击空白可快速添加。
+        </div>
+      </div>
+      <div class="modal-actions" data-page-node-id="CEvylrvnbiJPSp6xFtTB1o">
+        <button class="btn btn-primary" id="btnCloseSettings" data-page-node-id="EKlSDk5BxSLAMADHX7Yw22">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" hidden data-page-node-id="5Lth8OiZWUAyRPXN1axUD8"></div>
+
+  <!-- Scripts (plain, not modules; order matters) -->
+  <script src="js/store.js"></script>
+  <script src="js/favicon.js"></script>
+  <script src="js/launchpad.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

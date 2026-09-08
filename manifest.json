@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "iTab · 启动台起始页",
+  "version": "1.0.0",
+  "description": "把新标签页变成 macOS 启动台风格：网格收藏、自动获取 favicon、可自定义图标、分页与拖拽。",
+  "default_locale": "zh_CN",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "background": {
+    "service_worker": "js/bg.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "optional_permissions": [
+    "bookmarks"
+  ],
+  "icons": {
+    "16": "img/icon16.png",
+    "32": "img/icon32.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
+  },
+  "action": {
+    "default_title": "iTab"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' data: blob: https: http:; style-src 'self' 'unsafe-inline'; font-src 'self' data:"
+  }
+}
