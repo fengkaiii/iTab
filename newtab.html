@@ -12,7 +12,7 @@
   <div class="bg-tint" id="bgTint" data-page-node-id="ap5GZVGrBr3jrf66l9Lu2m"></div>
 
   <!-- 顶栏 -->
-  <header class="topbar" data-page-node-id="hKQgxOOtFulMpvlYaNFjOR">
+  <header class="topbar" id="topbar" data-page-node-id="hKQgxOOtFulMpvlYaNFjOR">
     <div class="topbar-left" data-page-node-id="8F7ByjFS8H2zapJCsqPGzb">
       <button class="icon-btn" id="btnSettings" title="设置" aria-label="设置" data-page-node-id="lNAZBsx4Fpol7JUP4huSc5">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="JlF8nARTAFjljXWY4i9wn9"><circle cx="12" cy="12" r="3" data-page-node-id="YdMrGM1835Z0WpVBkaffUq"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.86l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.86-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.86.34l-.06.06A2 2 0 1 1 4.25 16.97l.06-.06A1.7 1.7 0 0 0 4.65 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.86l-.06-.06A2 2 0 1 1 7.03 4.25l.06.06A1.7 1.7 0 0 0 9 4.65a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.86-.34l.06-.06A2 2 0 1 1 19.75 7.03l-.06.06A1.7 1.7 0 0 0 19.35 9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z" data-page-node-id="utAbXmuVD6MXg71V7pHDHz"/></svg>
@@ -35,8 +35,11 @@
     </div>
 
     <div class="topbar-right" data-page-node-id="AJREXBJ1ksXEwapofICXJA">
+      <button class="icon-btn" id="btnNotesToggle" title="便签" aria-label="便签" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M15 3v3h-3"/><line x1="10.5" y1="11" x2="13.5" y2="11"/><line x1="10.5" y1="14" x2="13.5" y2="14"/></svg>
+      </button>
       <button class="icon-btn" id="btnSaveSharedBar" title="保存到共享文件" aria-label="保存到共享文件">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </button>
       <button class="icon-btn" id="btnSync" title="从共享文件同步" aria-label="同步">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -53,6 +56,18 @@
       <section class="page page-current" id="pageRoot" data-page="0" data-page-node-id="5Xf3di1MwXDSkTW4NQs1db"></section>
     </div>
   </main>
+
+  <!-- 便签视图（全屏独立界面，点击顶栏便签按钮进入） -->
+  <section class="notes-view" id="notesView" hidden>
+    <header class="notes-head">
+      <button class="icon-btn" id="btnNotesBack" title="返回启动台" aria-label="返回启动台">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+      </button>
+      <span class="notes-title">便签</span>
+      <button class="btn btn-primary" id="btnAddNote">＋ 新建便签</button>
+    </header>
+    <div class="notes-grid" id="notesGrid"></div>
+  </section>
 
   <!-- 分页指示 -->
   <nav class="pager" id="pager" data-page-node-id="U6E40HcqN8WmpdlEcYCt1B"></nav>
@@ -256,6 +271,23 @@
       </div>
       <div class="modal-actions" data-page-node-id="CEvylrvnbiJPSp6xFtTB1o">
         <button class="btn btn-primary" id="btnCloseSettings" data-page-node-id="EKlSDk5BxSLAMADHX7Yw22">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弹窗：便签 -->
+  <div class="modal" id="modalNote" hidden>
+    <div class="modal-mask"></div>
+    <div class="modal-card">
+      <div class="modal-title" id="modalNoteTitle">便签</div>
+      <div class="modal-body">
+        <textarea id="fNoteText" rows="6" placeholder="写点什么…"></textarea>
+        <div class="note-color-row" id="noteColorRow"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btnNoteCancel">取消</button>
+        <button class="btn btn-danger" id="btnNoteDelete" hidden>删除</button>
+        <button class="btn btn-primary" id="btnNoteSave">保存</button>
       </div>
     </div>
   </div>

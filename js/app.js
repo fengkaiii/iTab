@@ -53,6 +53,9 @@
     dark:    ["#0a0a0a", "#1c1c1e", "#2c2c2e", "#3a3a3c", "#0a0a0a"]
   };
 
+  // 便签预设颜色（macOS 便签风）
+  const NOTE_COLORS = ["#FEF08A", "#BFDBFE", "#BBF7D0", "#FBCFE8", "#DDD6FE", "#FED7AA"];
+
   function applyBackground(settings) {
     const layer = $("#bgLayer");
     const bg = settings.background;
@@ -81,6 +84,10 @@
       this.state = null;
       this.lp = null;
       this.editingId = null;
+      this.notesMode = false;
+      this.editingNoteId = null;
+      this._noteDraft = null;
+      this._noteDragId = null;
     }
 
     async init() {
@@ -125,6 +132,7 @@
       if (url.searchParams.get("demo") === "1") this.openAdd();
       if (url.searchParams.get("settings") === "1") this.openSettings();
       if (url.searchParams.get("se") === "1") this._toggleEngineMenu();
+      if (url.searchParams.get("notes") === "1") { this.notesMode = true; this._applyNotesMode(); }
     }
 
     _normalize() {
@@ -134,6 +142,7 @@
       if (!itabStore.ENGINES[this.state.settings.searchEngine]) {
         this.state.settings.searchEngine = "google";
       }
+      if (!Array.isArray(this.state.notes)) this.state.notes = [];
       for (const it of this.state.items) {
         if (!it.id) it.id = itabStore.uid();
         if (!it.icon) it.icon = { type: "auto", value: "" };
@@ -223,6 +232,8 @@
       $("#btnGroupToggle").addEventListener("click", () => this._toggleGroupMode());
       $("#btnSync").addEventListener("click", () => this._syncNow());
       $("#btnSaveSharedBar").addEventListener("click", () => this._saveSharedQuick());
+      $("#btnNotesToggle").addEventListener("click", () => this._toggleNotesView());
+      $("#btnNotesBack").addEventListener("click", () => this._toggleNotesView());
 
       // 搜索引擎切换（聚合搜索下拉）
       $("#btnSearchEngine").addEventListener("click", (e) => {
@@ -251,6 +262,8 @@
       this._wireItemModal();
       // 设置弹窗
       this._wireSettingsModal();
+      // 便签弹窗
+      this._wireNotesModal();
     }
 
     _closeAllModals() {
@@ -581,6 +594,7 @@
               const data = JSON.parse(fr.result);
               if (!data || !Array.isArray(data.items)) throw new Error("格式不正确");
               this.state.items = data.items;
+              if (Array.isArray(data.notes)) this.state.notes = data.notes;
               if (data.settings) this.state.settings = Object.assign({}, itabStore.DEFAULT_SETTINGS, data.settings);
               this._normalize();
               this._persist().then(() => { applyBackground(this.state.settings); this.lp.setState(this.state); toast("已导入 " + this.state.items.length + " 项"); });
@@ -634,7 +648,7 @@
     }
 
     _exportJson() {
-      const data = { version: 1, items: this.state.items, settings: this.state.settings };
+      const data = { version: 1, items: this.state.items, notes: this.state.notes, settings: this.state.settings };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -720,6 +734,7 @@
         const data = await itabFileStore.load();
         if (!data || !Array.isArray(data.items)) throw new Error("文件格式不正确");
         this.state.items = data.items;
+        if (Array.isArray(data.notes)) this.state.notes = data.notes;
         if (data.settings) this.state.settings = Object.assign({}, itabStore.DEFAULT_SETTINGS, data.settings);
         this._normalize();
         await this._persist();
@@ -736,7 +751,7 @@
 
     async _saveShared() {
       try {
-        const data = { version: 1, items: this.state.items, settings: this.state.settings };
+        const data = { version: 1, items: this.state.items, notes: this.state.notes, settings: this.state.settings };
         await itabFileStore.save(data);
         this._syncFileStatus();
         toast("已保存到共享文件");
@@ -798,6 +813,217 @@
             });
           })
         : tryImport();
+    }
+
+    // ============ 便签视图 + CRUD ============
+    _toggleNotesView() {
+      this.notesMode = !this.notesMode;
+      this._applyNotesMode();
+    }
+
+    _applyNotesMode() {
+      const notesView = $("#notesView");
+      const topbar = $("#topbar");
+      const stage = $("#stage");
+      const pager = $("#pager");
+      const btn = $("#btnNotesToggle");
+      if (this.notesMode) {
+        if (topbar) topbar.hidden = true;
+        if (stage) stage.hidden = true;
+        if (pager) pager.hidden = true;
+        if (notesView) notesView.hidden = false;
+        this._renderNotes();
+      } else {
+        if (notesView) notesView.hidden = true;
+        if (topbar) topbar.hidden = false;
+        if (stage) stage.hidden = false;
+        if (pager) pager.hidden = false;
+        if (this.lp) this.lp.render();
+      }
+      if (btn) {
+        btn.classList.toggle("active", this.notesMode);
+        btn.setAttribute("aria-pressed", this.notesMode ? "true" : "false");
+      }
+    }
+
+    _fmtNoteTime(ts) {
+      if (!ts) return "";
+      const d = new Date(ts);
+      const now = new Date();
+      const sameDay = d.toDateString() === now.toDateString();
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      if (sameDay) return hh + ":" + mm;
+      return (d.getMonth() + 1) + "/" + d.getDate() + " " + hh + ":" + mm;
+    }
+
+    _renderNotes() {
+      const grid = $("#notesGrid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      const notes = this.state.notes || [];
+      if (!notes.length) {
+        grid.appendChild(el("div", { class: "notes-empty", text: "暂无便签，点右上角「＋ 新建便签」添加" }));
+        return;
+      }
+      notes.forEach((n) => {
+        const card = el("div", { class: "note-card", draggable: "true", "data-id": n.id, style: "background:" + (n.color || NOTE_COLORS[0]) });
+        card.appendChild(el("div", { class: "note-text", text: n.text || "" }));
+        card.appendChild(el("div", { class: "note-time", text: this._fmtNoteTime(n.updatedAt || n.createdAt) }));
+        // hover 显示的红色删除按钮
+        const del = el("button", {
+          class: "note-delete",
+          type: "button",
+          title: "删除便签",
+          "aria-label": "删除便签",
+          html: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+        });
+        del.addEventListener("click", (e) => {
+          e.stopPropagation();
+          this._deleteNoteById(n.id);
+        });
+        card.appendChild(del);
+        // 拖拽排序
+        card.addEventListener("dragstart", (e) => {
+          this._noteDragId = n.id;
+          card.classList.add("dragging");
+          e.dataTransfer.effectAllowed = "move";
+          try { e.dataTransfer.setData("text/plain", n.id); } catch (_) {}
+        });
+        card.addEventListener("dragover", (e) => {
+          if (!this._noteDragId || this._noteDragId === n.id) return;
+          e.preventDefault();
+          e.dataTransfer.dropEffect = "move";
+          card.classList.add("drop-target");
+        });
+        card.addEventListener("dragleave", () => card.classList.remove("drop-target"));
+        card.addEventListener("drop", (e) => {
+          e.preventDefault();
+          card.classList.remove("drop-target");
+          const from = this._noteDragId;
+          this._noteDragId = null;
+          if (from && from !== n.id) this._moveNote(from, n.id);
+        });
+        card.addEventListener("dragend", () => {
+          card.classList.remove("dragging");
+          $$(".note-card.drop-target").forEach((t) => t.classList.remove("drop-target"));
+          this._noteDragId = null;
+        });
+        card.addEventListener("click", () => {
+          if (card.classList.contains("dragging")) return;
+          this.openNote(n.id);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    addNote() {
+      this.editingNoteId = null;
+      this._noteDraft = { text: "", color: NOTE_COLORS[0] };
+      $("#modalNoteTitle").textContent = "新建便签";
+      $("#btnNoteDelete").hidden = true;
+      this._fillNoteForm();
+      $("#modalNote").hidden = false;
+      setTimeout(() => $("#fNoteText").focus(), 50);
+    }
+
+    openNote(id) {
+      const n = (this.state.notes || []).find((x) => x.id === id);
+      if (!n) return;
+      this.editingNoteId = id;
+      this._noteDraft = { text: n.text || "", color: n.color || NOTE_COLORS[0] };
+      $("#modalNoteTitle").textContent = "编辑便签";
+      $("#btnNoteDelete").hidden = false;
+      this._fillNoteForm();
+      $("#modalNote").hidden = false;
+      setTimeout(() => $("#fNoteText").focus(), 50);
+    }
+
+    _fillNoteForm() {
+      const d = this._noteDraft || { text: "", color: NOTE_COLORS[0] };
+      $("#fNoteText").value = d.text || "";
+      this._renderNoteColors(d.color);
+    }
+
+    _renderNoteColors(selected) {
+      const row = $("#noteColorRow");
+      if (!row) return;
+      row.innerHTML = "";
+      NOTE_COLORS.forEach((c) => {
+        const sw = el("div", { class: "note-color" + (c === selected ? " active" : ""), "data-color": c, style: "background:" + c });
+        sw.addEventListener("click", () => {
+          if (this._noteDraft) this._noteDraft.color = c;
+          this._renderNoteColors(c);
+        });
+        row.appendChild(sw);
+      });
+    }
+
+    _saveNote() {
+      const text = $("#fNoteText").value.trim();
+      if (!text) { toast("便签内容不能为空"); return; }
+      const now = Date.now();
+      if (this.editingNoteId) {
+        const n = this.state.notes.find((x) => x.id === this.editingNoteId);
+        if (n) {
+          n.text = text;
+          n.color = this._noteDraft.color;
+          n.updatedAt = now;
+        }
+      } else {
+        this.state.notes.unshift({
+          id: "n" + itabStore.uid(),
+          text: text,
+          color: this._noteDraft.color,
+          createdAt: now,
+          updatedAt: now
+        });
+      }
+      this._persist().then(() => {
+        $("#modalNote").hidden = true;
+        this._renderNotes();
+        toast(this.editingNoteId ? "已更新便签" : "已添加便签");
+      });
+    }
+
+    _deleteNote() {
+      if (!this.editingNoteId) return;
+      const id = this.editingNoteId;
+      $("#modalNote").hidden = true;
+      this._deleteNoteById(id);
+    }
+
+    _deleteNoteById(id) {
+      const idx = (this.state.notes || []).findIndex((x) => x.id === id);
+      if (idx < 0) return;
+      this.state.notes.splice(idx, 1);
+      this._persist().then(() => {
+        this._renderNotes();
+        toast("已删除便签");
+      });
+    }
+
+    _moveNote(fromId, toId) {
+      const notes = this.state.notes || [];
+      const from = notes.findIndex((x) => x.id === fromId);
+      const to = notes.findIndex((x) => x.id === toId);
+      if (from < 0 || to < 0 || from === to) return;
+      const moved = notes.splice(from, 1)[0];
+      notes.splice(to, 0, moved);
+      this._persist().then(() => this._renderNotes());
+    }
+
+    _wireNotesModal() {
+      $("#btnAddNote").addEventListener("click", () => this.addNote());
+      $("#btnNoteCancel").addEventListener("click", () => { $("#modalNote").hidden = true; });
+      $("#btnNoteSave").addEventListener("click", () => this._saveNote());
+      $("#btnNoteDelete").addEventListener("click", () => this._deleteNote());
+      $("#fNoteText").addEventListener("keydown", (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+          e.preventDefault();
+          this._saveNote();
+        }
+      });
     }
   }
 

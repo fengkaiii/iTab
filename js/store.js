@@ -68,6 +68,7 @@
     return {
       version: 1,
       items: DEFAULT_ITEMS.slice(),
+      notes: [],
       settings: Object.assign({}, DEFAULT_SETTINGS)
     };
   }
@@ -76,6 +77,7 @@
     if (!data || typeof data !== "object") return blank();
     if (!data.version) data.version = 1;
     if (!Array.isArray(data.items)) data.items = [];
+    if (!Array.isArray(data.notes)) data.notes = [];
     if (!data.settings) data.settings = {};
     // fill missing settings
     for (const k in DEFAULT_SETTINGS) {
