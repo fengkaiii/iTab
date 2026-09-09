@@ -83,7 +83,7 @@
   function buildTile(item, state) {
     const tile = el("div", { class: "tile", draggable: "true", "data-id": item.id });
     const icon = el("div", { class: "tile-icon" });
-    renderIconInto(icon, item, { source: state.settings.iconSource });
+    renderIconInto(icon, item, { source: item.iconSource || state.settings.iconSource });
     const label = el("div", { class: "tile-label", text: item.title || "" });
     tile.appendChild(icon);
     tile.appendChild(label);

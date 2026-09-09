@@ -35,6 +35,12 @@
     </div>
 
     <div class="topbar-right" data-page-node-id="AJREXBJ1ksXEwapofICXJA">
+      <button class="icon-btn" id="btnSaveSharedBar" title="保存到共享文件" aria-label="保存到共享文件">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      </button>
+      <button class="icon-btn" id="btnSync" title="从共享文件同步" aria-label="同步">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
       <button class="icon-btn" id="btnAdd" title="添加站点" aria-label="添加" data-page-node-id="CGpH0COL45xxtFyFHaYm1I">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="VJKyMZPLyAVAAi25bqj8V9"><path d="M12 5v14M5 12h14" data-page-node-id="dhKfrpHo8WVaQ7ItjwIhAx"/></svg>
       </button>
@@ -208,8 +214,8 @@
                 <option value="current" data-page-node-id="Py7AY0R2CDsJ0v4NLQjy6b">当前标签页</option>
               </select>
             </label>
-            <label class="form-field" data-page-node-id="hRaxQYrZIU2A8nz64w3CIk"><span data-page-node-id="9iEEseSw9YJuQI2EEuSqfC">图标源（自动模式）</span>
-              <select id="fIconSource" data-page-node-id="tHlJtuiB54xbZ5hzbGJFm1">
+            <label class="form-field" data-page-node-id="hRaxQYrZIU2A8nz64w3CIk"><span data-page-node-id="9iEEseSw9YJuQI2EEuSqfC">默认图标源</span>
+              <select id="fDefaultIconSource" data-page-node-id="tHlJtuiB54xbZ5hzbGJFm1">
                 <option value="auto" data-page-node-id="iQuruzcqD0AZDW02T4CLKm">自动多源</option>
                 <option value="duckduckgo" data-page-node-id="bH5j40B73nql2kRN9uUtHZ">DuckDuckGo</option>
                 <option value="google" data-page-node-id="OjMql9C99NLsWadfZVAVEQ">Google</option>
@@ -225,6 +231,18 @@
             <button class="btn" id="btnImportJson" data-page-node-id="nVr09WkwFjrYFaHmeMcSpz">导入 JSON</button>
             <button class="btn" id="btnExportJson" data-page-node-id="7LyfXnRH4SIQNSjprylaYS">导出 JSON</button>
             <button class="btn" id="btnImportBookmarks" data-page-node-id="RqBYJuGXNYSaByU4Lfj7mS">从书签导入…</button>
+          </div>
+          <div class="fs-block">
+            <div class="fs-status" id="fsStatus">未指定共享文件</div>
+            <div class="form-row form-row-3">
+              <button class="btn" id="btnPickShared">选择共享文件…</button>
+              <button class="btn" id="btnLoadShared">从文件加载</button>
+              <button class="btn btn-primary" id="btnSaveShared">保存到文件</button>
+            </div>
+            <div class="fs-foot">
+              <button class="btn btn-ghost fs-clear" id="btnClearShared">清除指定</button>
+              <p class="hint">多浏览器共用：在云同步目录（iCloud / Dropbox / OneDrive）放一个 JSON 文件，每个浏览器都「选择共享文件」指向它；一处「保存到文件」，另一处点顶栏同步图标或「从文件加载」。手动触发，不会自动读写。</p>
+            </div>
           </div>
           <div class="form-row form-row-2" data-page-node-id="vjIezFYe7AxDGg43WbNepn">
             <button class="btn btn-danger" id="btnReset" data-page-node-id="4T4cKEaMB88X9rFbv1kw4C">恢复默认示例</button>
@@ -247,6 +265,7 @@
 
   <!-- Scripts (plain, not modules; order matters) -->
   <script src="js/store.js"></script>
+  <script src="js/filestore.js"></script>
   <script src="js/favicon.js"></script>
   <script src="js/launchpad.js"></script>
   <script src="js/app.js"></script>

@@ -221,6 +221,8 @@
       $("#btnAdd").addEventListener("click", () => this.openAdd());
       $("#btnSettings").addEventListener("click", () => this.openSettings());
       $("#btnGroupToggle").addEventListener("click", () => this._toggleGroupMode());
+      $("#btnSync").addEventListener("click", () => this._syncNow());
+      $("#btnSaveSharedBar").addEventListener("click", () => this._saveSharedQuick());
 
       // 搜索引擎切换（聚合搜索下拉）
       $("#btnSearchEngine").addEventListener("click", (e) => {
@@ -342,7 +344,7 @@
         url: it.url,
         icon: JSON.parse(JSON.stringify(it.icon || { type: "auto", value: "" })),
         openIn: it.openIn || "new",
-        iconSource: this.state.settings.iconSource,
+        iconSource: it.iconSource || this.state.settings.iconSource,
         group: it.group || ""
       };
       $("#modalItemTitle").textContent = "编辑站点";
@@ -425,6 +427,7 @@
         url,
         icon: this._editDraft.icon,
         openIn: $("#fOpenIn").value,
+        iconSource: $("#fIconSource").value,
         group: ($("#fGroup").value || "").trim(),
         addedAt: Date.now()
       };
@@ -435,7 +438,6 @@
         data.id = itabStore.uid();
         this.state.items.push(data);
       }
-      this.state.settings.iconSource = $("#fIconSource").value;
       this._persist().then(() => {
         $("#modalItem").hidden = true;
         toast(this.editingId ? "已更新" : "已添加");
@@ -560,7 +562,7 @@
         this.state.settings.openIn = e.target.value;
         this._persist();
       });
-      $("#fIconSource").addEventListener("change", (e) => {
+      $("#fDefaultIconSource").addEventListener("change", (e) => {
         this.state.settings.iconSource = e.target.value;
         this._persist().then(() => this.lp.render());
       });
@@ -589,6 +591,13 @@
         input.click();
       });
       $("#btnImportBookmarks").addEventListener("click", () => this._importBookmarks());
+
+      // 多浏览器共享（指定文件存放）
+      $("#btnPickShared").addEventListener("click", () => this._pickShared());
+      $("#btnLoadShared").addEventListener("click", () => this._loadShared());
+      $("#btnSaveShared").addEventListener("click", () => this._saveShared());
+      $("#btnClearShared").addEventListener("click", () => this._clearShared());
+
       $("#btnReset").addEventListener("click", () => {
         if (!confirm("恢复为默认示例？将清空你当前的站点。")) return;
         this.state.items = itabStore.DEFAULT_ITEMS.slice();
@@ -614,8 +623,9 @@
       $("#fShowSearch").checked = s.showSearch;
       $("#fSearchEngine").value = s.searchEngine;
       $("#fOpenIn").value = s.openIn;
-      $("#fIconSource").value = s.iconSource;
+      $("#fDefaultIconSource").value = s.iconSource;
       this._syncBgActive();
+      this._syncFileStatus();
       $("#modalSettings").hidden = false;
     }
 
@@ -634,6 +644,116 @@
       a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
       toast("已导出 JSON");
+    }
+
+    // ============ 多浏览器共享（指定文件存放） ============
+    _syncFileStatus() {
+      const el = $("#fsStatus");
+      if (!el) return;
+      el.classList.remove("has-file", "error");
+      if (!itabFileStore.isSupported()) {
+        el.textContent = "当前浏览器不支持直接读写本地文件，请改用下方「导入 / 导出 JSON」手动同步。";
+        el.classList.add("error");
+        return;
+      }
+      itabFileStore.get().then((rec) => {
+        if (rec && rec.name) {
+          el.textContent = "共享文件：" + rec.name;
+          el.classList.add("has-file");
+        } else {
+          el.textContent = "未指定共享文件。";
+        }
+      });
+    }
+
+    async _syncNow() {
+      if (!itabFileStore.isSupported()) {
+        toast("当前浏览器不支持直接读写本地文件");
+        return;
+      }
+      const rec = await itabFileStore.get();
+      if (!rec) {
+        // 未指定共享文件 → 先选择再加载
+        try { await itabFileStore.pick(); }
+        catch (e) {
+          if (e && e.name === "AbortError") return;
+          toast("选择失败：" + itabFileStore.friendly(e));
+          return;
+        }
+        this._syncFileStatus();
+      }
+      await this._loadShared();
+    }
+
+    async _saveSharedQuick() {
+      if (!itabFileStore.isSupported()) {
+        toast("当前浏览器不支持直接读写本地文件");
+        return;
+      }
+      const rec = await itabFileStore.get();
+      if (!rec) {
+        // 未指定共享文件 → 先选择再保存
+        try { await itabFileStore.pick(); }
+        catch (e) {
+          if (e && e.name === "AbortError") return;
+          toast("选择失败：" + itabFileStore.friendly(e));
+          return;
+        }
+        this._syncFileStatus();
+      }
+      await this._saveShared();
+    }
+
+    async _pickShared() {
+      try {
+        const meta = await itabFileStore.pick();
+        this._syncFileStatus();
+        toast("已指定共享文件：" + meta.name);
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        toast("选择失败：" + itabFileStore.friendly(e));
+      }
+    }
+
+    async _loadShared() {
+      try {
+        const data = await itabFileStore.load();
+        if (!data || !Array.isArray(data.items)) throw new Error("文件格式不正确");
+        this.state.items = data.items;
+        if (data.settings) this.state.settings = Object.assign({}, itabStore.DEFAULT_SETTINGS, data.settings);
+        this._normalize();
+        await this._persist();
+        applyBackground(this.state.settings);
+        this.lp.setState(this.state);
+        this._syncGroupToggle();
+        this._syncFileStatus();
+        toast("已同步 " + this.state.items.length + " 项");
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        toast("同步失败：" + itabFileStore.friendly(e));
+      }
+    }
+
+    async _saveShared() {
+      try {
+        const data = { version: 1, items: this.state.items, settings: this.state.settings };
+        await itabFileStore.save(data);
+        this._syncFileStatus();
+        toast("已保存到共享文件");
+      } catch (e) {
+        if (e && e.name === "AbortError") return;
+        toast("保存失败：" + itabFileStore.friendly(e));
+      }
+    }
+
+    async _clearShared() {
+      try {
+        await itabFileStore.clear();
+        this._syncFileStatus();
+        toast("已清除共享文件指定");
+      } catch (e) {
+        toast("清除失败：" + itabFileStore.friendly(e));
+      }
     }
 
     _importBookmarks() {

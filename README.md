@@ -11,6 +11,7 @@
 - 列数自适应 / 固定，图标大小、标签字号可调
 - 多搜索引擎（Google / Bing），可隐藏搜索框
 - 导入 / 导出 JSON 备份，**从浏览器书签一键导入**（按需申请 `bookmarks` 权限）
+- **多浏览器共享**：指定一个共享 JSON 文件（放在云同步目录），顶栏同步图标一键拉取、设置里手动保存/加载，让 Chrome / Edge / Brave 共用同一套数据
 - 数据本地存储（`chrome.storage.local`），不上传任何信息
 
 零构建步骤，下载即用。
@@ -24,6 +25,7 @@ itab/
 ├── css/launchpad.css      # 启动台样式
 ├── js/
 │   ├── store.js           # 数据层（chrome.storage.local + localStorage 降级）
+│   ├── filestore.js       # 多浏览器共享（File System Access API 读写指定 JSON 文件）
 │   ├── favicon.js         # favicon 多源回退 / Emoji / 字母 / 上传 工具
 │   ├── launchpad.js       # 网格渲染 / 分页 / 拖拽 / 搜索
 │   ├── app.js             # 顶层交互（弹窗、设置、导入导出、背景）
@@ -58,6 +60,7 @@ itab/
 | ← / → | 翻页 |
 | 顶部搜索框 | 即时过滤；回车打开首个匹配或调用当前搜索引擎 |
 | 点击放大镜图标 | 展开聚合搜索下拉，切换搜索引擎（Google / Bing），切换后若已有关键词会直接用新引擎搜索 |
+| 点击顶栏同步图标（循环双箭头） | 从共享文件拉取最新数据；未指定共享文件时先弹出选择 |
 | `Esc` | 退出编辑模式 / 关闭弹窗 |
 
 ## 数据格式
@@ -71,6 +74,7 @@ itab/
       "title": "GitHub",
       "url": "https://github.com",
       "icon": { "type": "auto", "value": "" },
+      "iconSource": "google",
       "openIn": "new",
       "group": "开发"
     },
@@ -110,6 +114,36 @@ itab/
 - `emoji` — Emoji 图标（`value` 为 emoji 字符）
 - `letter` — 字母 + 渐变（`value` 为字母，`bg: [c1, c2]`）
 - `url` — 自定义图标 URL（`value` 为 https URL）
+
+`item.iconSource` 可选值（**每个收藏独立**，缺省时回退到全局默认 `settings.iconSource`）：
+
+- `auto` — 自动多源回退（`/favicon.ico` → Google s2 → DuckDuckGo）
+- `duckduckgo` — 仅 DuckDuckGo
+- `google` — 仅 Google s2
+- `direct` — 仅 `/favicon.ico`
+
+编辑弹窗里的「来源」是**当前收藏单独设置**；设置面板里的「默认图标源」是**全局默认**（用于新建收藏、以及没有单独设置过的旧收藏）。
+
+## 数据存储与多浏览器共享
+
+**数据存放在哪？** 默认写入 `chrome.storage.local`（键 `itab.v1`），物理位置在各浏览器 Profile 下的：
+
+```
+<Profile>/Local Extension Settings/<扩展ID>/   （LevelDB 二进制格式）
+```
+
+例如 Chrome：`~/Library/Application Support/Google/Chrome/Default/Local Extension Settings/<扩展ID>/`。这是二进制 LevelDB，每个浏览器、每个扩展 ID 各自独立，**无法跨浏览器直接共用**。
+
+**让多个浏览器共用一套 JSON**：扩展内新增「指定文件存放」能力（基于 File System Access API，手动触发）：
+
+1. 在一个云同步目录（iCloud / Dropbox / OneDrive）或共享路径里准备一个 `.json` 文件（可先「导出 JSON」生成一份）。
+2. 每个浏览器打开「设置 → 数据」，点「选择共享文件…」指向**同一个**文件。
+3. 在一处改完收藏后「保存到文件」；到另一个浏览器点顶栏的**同步图标**（循环双箭头）或「从文件加载」即可拉取最新数据。
+
+> 说明：
+> - 同步为**手动触发**，不会自动读写文件（macOS 扩展环境下的 File System Access API 权限不持久，自动同步不可靠）。
+> - 文件句柄按浏览器分别保存在各自的 IndexedDB 中，所以每个浏览器都要各自「选择共享文件」一次。
+> - 若浏览器不支持该 API（如部分 Brave 未开开关、Firefox），会回退提示使用「导入 / 导出 JSON」。
 
 ## 分组模式
 
