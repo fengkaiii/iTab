@@ -61,7 +61,7 @@
   // 搜索引擎（聚合搜索下拉与回车搜索共用）
   const ENGINES = {
     google: { name: "Google", short: "G", color: "#4285F4", url: function (q) { return "https://www.google.com/search?q=" + encodeURIComponent(q); } },
-    bing:   { name: "Bing",   short: "B", color: "#008373", url: function (q) { return "https://www.bing.com/search?q=" + encodeURIComponent(q); } }
+    bing:   { name: "Bing",   short: "B", color: "#008373", url: function (q) { return "https://cn.bing.com/search?q=" + encodeURIComponent(q); } }
   };
 
   function blank() {

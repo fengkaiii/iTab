@@ -221,22 +221,29 @@
           if (e.key === "Enter") {
             if (isComposing) return; // 输入法确认候选词，不搜索
             e.preventDefault();
-            const q = sInput.value.trim();
+            let q = sInput.value.trim();
             if (!q) return;
-            // 找到第一个匹配项并打开
-            const matched = this.state.items.find((it) => matches(it, q));
-            if (matched) {
-              if (this.state.settings.openIn === "current" && root.chrome && chrome.tabs) {
-                chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                  if (tabs && tabs[0]) chrome.tabs.update(tabs[0].id, { url: matched.url });
-                });
-              } else {
-                root.open(matched.url, "_blank", "noopener,noreferrer");
+            // 前缀规则：b:: 强制 bing、g:: 强制 google（去掉前缀，跳过收藏匹配直接搜索）
+            let forcedEngine = null;
+            if (/^b::/i.test(q)) { forcedEngine = "bing"; q = q.replace(/^b::/i, "").trim(); }
+            else if (/^g::/i.test(q)) { forcedEngine = "google"; q = q.replace(/^g::/i, "").trim(); }
+            if (!q) return;
+            if (!forcedEngine) {
+              // 无前缀：先找匹配收藏并打开
+              const matched = this.state.items.find((it) => matches(it, q));
+              if (matched) {
+                if (this.state.settings.openIn === "current" && root.chrome && chrome.tabs) {
+                  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                    if (tabs && tabs[0]) chrome.tabs.update(tabs[0].id, { url: matched.url });
+                  });
+                } else {
+                  root.open(matched.url, "_blank", "noopener,noreferrer");
+                }
+                return;
               }
-              return;
             }
-            // 否则走搜索引擎
-            const engine = itabStore.ENGINES[this.state.settings.searchEngine] || itabStore.ENGINES.google;
+            // 走搜索引擎（强制或默认）
+            const engine = itabStore.ENGINES[forcedEngine || this.state.settings.searchEngine] || itabStore.ENGINES.google;
             root.open(engine.url(q), "_blank", "noopener,noreferrer");
           }
         });
